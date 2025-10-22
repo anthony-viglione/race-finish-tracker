@@ -146,7 +146,7 @@ function App() {
     // Add each finisher
     let yPosition = 80;
     finishers.forEach((finisher, index) => {
-      if (yPosition > 270) { // Start new page if needed
+      if (yPosition > 285) { // Start new page if needed (increased threshold)
         doc.addPage();
         yPosition = 30;
         // Re-add headers on new page
@@ -158,12 +158,23 @@ function App() {
         yPosition = 40;
       }
       
-      doc.setFontSize(12);
+      doc.setFontSize(10); // Further reduced font size
+      
+      // Place column (fixed width: 30 points)
       doc.text(`#${finisher.place}`, 20, yPosition);
-      doc.text(finisher.name || 'Unnamed Runner', 50, yPosition);
+      
+      // Name column (wrapped text, max width: 60 points)
+      const name = finisher.name || 'Unnamed Runner';
+      const nameLines = doc.splitTextToSize(name, 60);
+      doc.text(nameLines, 50, yPosition);
+      
+      // Time column (fixed width: 50 points, right-aligned)
       doc.text(formatTime(finisher.time), 120, yPosition);
       
-      yPosition += 15;
+      // Calculate height needed for wrapped text
+      const lineHeight = 4; // Height per line
+      const nameHeight = nameLines.length * lineHeight;
+      yPosition += Math.max(8, nameHeight + 2); // Use at least 8 points, or name height + 2
     });
     
     // Save the PDF
