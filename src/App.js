@@ -11,6 +11,8 @@ function App() {
   const [currentFinisher, setCurrentFinisher] = useState(null);
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingFinisher, setEditingFinisher] = useState(null);
+  const [editNameValue, setEditNameValue] = useState('');
+  const [raceName, setRaceName] = useState('');
 
   // Load data from localStorage on component mount
   useEffect(() => {
@@ -81,22 +83,25 @@ function App() {
 
   const startEditRunner = (finisher) => {
     setEditingFinisher(finisher);
+    setEditNameValue(finisher.name || '');
     setShowEditModal(true);
   };
 
-  const saveEditedName = (newName) => {
+  const saveEditedName = () => {
     setFinishers(prev => prev.map(finisher => 
       finisher.id === editingFinisher.id 
-        ? { ...finisher, name: newName.trim() || `Runner ${finisher.place}` }
+        ? { ...finisher, name: editNameValue.trim() || `Runner ${finisher.place}` }
         : finisher
     ));
     setShowEditModal(false);
     setEditingFinisher(null);
+    setEditNameValue('');
   };
 
   const cancelEdit = () => {
     setShowEditModal(false);
     setEditingFinisher(null);
+    setEditNameValue('');
   };
 
   const downloadPDF = () => {
@@ -104,7 +109,8 @@ function App() {
     
     // Add title
     doc.setFontSize(20);
-    doc.text('Race Results', 20, 30);
+    const title = raceName ? `${raceName} - Results` : 'Race Results';
+    doc.text(title, 20, 30);
     
     // Add date
     doc.setFontSize(12);
@@ -159,6 +165,7 @@ function App() {
     setStartTime(null);
     setCurrentTime(0);
     setFinishers([]);
+    setRaceName('');
   };
 
   return (
@@ -171,11 +178,28 @@ function App() {
       <main className="App-main">
         {/* Timer Display */}
         <div className="timer-section">
+          {raceName && (
+            <div className="race-name-display">
+              <h3>{raceName}</h3>
+            </div>
+          )}
           <div className="timer-display">
             {formatTime(currentTime)}
           </div>
           
           <div className="timer-controls">
+            {!isRunning && (
+              <div className="race-name-input">
+                <input
+                  type="text"
+                  placeholder="Enter race name (optional)"
+                  value={raceName}
+                  onChange={(e) => setRaceName(e.target.value)}
+                  className="race-name-field"
+                />
+              </div>
+            )}
+            
             {!isRunning ? (
               <button className="start-btn" onClick={startRace}>
                 Start Race
@@ -210,7 +234,9 @@ function App() {
         {finishers.length > 0 && (
           <div className="results-section">
             <div className="results-header">
-              <h2>Race Results</h2>
+              <div className="results-title">
+                <h2>{raceName ? `${raceName} - Results` : 'Race Results'}</h2>
+              </div>
               <button className="download-btn" onClick={downloadPDF}>
                 📄 Download PDF
               </button>
@@ -269,16 +295,17 @@ function App() {
             <input
               type="text"
               placeholder="Runner name"
-              defaultValue={editingFinisher.name}
+              value={editNameValue}
+              onChange={(e) => setEditNameValue(e.target.value)}
               autoFocus
               onKeyPress={(e) => {
                 if (e.key === 'Enter') {
-                  saveEditedName(e.target.value);
+                  saveEditedName();
                 }
               }}
             />
             <div className="modal-buttons">
-              <button onClick={() => saveEditedName(document.querySelector('input').value)}>
+              <button onClick={saveEditedName}>
                 Save Changes
               </button>
               <button onClick={cancelEdit}>
