@@ -91,6 +91,14 @@ function App() {
     setCurrentFinisher(null);
   };
 
+  const cancelNameEntry = () => {
+    // Auto-create finisher entry with default name when backing out
+    const updatedFinisher = { ...currentFinisher, name: `Runner ${finishers.length + 1}` };
+    setFinishers(prev => [...prev, updatedFinisher]);
+    setShowNameModal(false);
+    setCurrentFinisher(null);
+  };
+
   const startEditRunner = (finisher) => {
     setEditingFinisher(finisher);
     setEditNameValue(finisher.name || '');
@@ -272,8 +280,11 @@ function App() {
 
       {/* Name Entry Modal */}
       {showNameModal && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <div className="modal-overlay" onClick={cancelNameEntry}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={cancelNameEntry}>
+              ×
+            </button>
             <h3>Enter Runner Name</h3>
             <input
               type="text"
@@ -299,8 +310,11 @@ function App() {
 
       {/* Edit Name Modal */}
       {showEditModal && editingFinisher && (
-        <div className="modal-overlay">
-          <div className="modal">
+        <div className="modal-overlay" onClick={cancelEdit}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={cancelEdit}>
+              ×
+            </button>
             <h3>Edit Runner Name</h3>
             <input
               type="text"
