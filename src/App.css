@@ -336,6 +336,80 @@
   background-color: #7f8c8d;
 }
 
+/* Stop Confirmation Modal */
+.stop-confirmation-modal {
+  position: relative;
+  max-width: 450px;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #95a5a6;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.close-btn:hover {
+  background-color: #ecf0f1;
+  color: #2c3e50;
+}
+
+.stop-confirmation-modal h3 {
+  color: #e74c3c;
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+
+.stop-confirmation-modal p {
+  color: #34495e;
+  margin-bottom: 25px;
+  line-height: 1.5;
+  font-size: 1rem;
+}
+
+.confirm-stop-btn {
+  background-color: #e74c3c;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.confirm-stop-btn:hover {
+  background-color: #c0392b;
+  transform: translateY(-1px);
+}
+
+.cancel-stop-btn {
+  background-color: #27ae60;
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.cancel-stop-btn:hover {
+  background-color: #229954;
+  transform: translateY(-1px);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .App-header h1 {

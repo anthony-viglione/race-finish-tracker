@@ -13,6 +13,7 @@ function App() {
   const [editingFinisher, setEditingFinisher] = useState(null);
   const [editNameValue, setEditNameValue] = useState('');
   const [raceName, setRaceName] = useState('');
+  const [showStopConfirmation, setShowStopConfirmation] = useState(false);
 
   // Load data from localStorage on component mount
   useEffect(() => {
@@ -48,8 +49,17 @@ function App() {
     setFinishers([]); // Clear previous race data
   };
 
-  const stopRace = () => {
+  const requestStopRace = () => {
+    setShowStopConfirmation(true);
+  };
+
+  const confirmStopRace = () => {
     setIsRunning(false);
+    setShowStopConfirmation(false);
+  };
+
+  const cancelStopRace = () => {
+    setShowStopConfirmation(false);
   };
 
   const recordFinisher = () => {
@@ -205,7 +215,7 @@ function App() {
                 Start Race
               </button>
             ) : (
-              <button className="stop-btn" onClick={stopRace}>
+              <button className="stop-btn" onClick={requestStopRace}>
                 Stop Race
               </button>
             )}
@@ -310,6 +320,27 @@ function App() {
               </button>
               <button onClick={cancelEdit}>
                 Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Stop Race Confirmation Modal */}
+      {showStopConfirmation && (
+        <div className="modal-overlay" onClick={cancelStopRace}>
+          <div className="modal stop-confirmation-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="close-btn" onClick={cancelStopRace}>
+              ×
+            </button>
+            <h3>⚠️ Stop Race Confirmation</h3>
+            <p>Are you sure you want to stop the race? The timer will stop and you won't be able to record more finishers.</p>
+            <div className="modal-buttons">
+              <button className="confirm-stop-btn" onClick={confirmStopRace}>
+                Yes, Stop Race
+              </button>
+              <button className="cancel-stop-btn" onClick={cancelStopRace}>
+                Continue Race
               </button>
             </div>
           </div>
